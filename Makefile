@@ -84,6 +84,7 @@ re:
 # TEST_MAIN = $(SRC_DIR)/all_tests.cpp
 
 UTEST := src/all_tests.cpp
+UTEST += src/tmp/tests/tmp_test.cpp
 
 test: re
 	g++ $(UTEST) -o $(TEST) -lCppUTest -lCppUTestExt

@@ -8,5 +8,5 @@ TEST_GROUP(FirstTestGroup)
 
 TEST(FirstTestGroup, FirstTest)
 {
-    int a = 0;
+    FAIL("FAIL ME!");
 }
