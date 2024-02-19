@@ -28,7 +28,7 @@ BINS		:= $(BIN_DIR)/$(NAME)
 
 CC          := gcc
 CFLAGS      := -Wall -Wextra -Werror
-CPPFLAGS    := -I include
+CPPFLAGS    := -Isrc
 
 #------------------------------------------------#
 #   UTENSILS                                     #
@@ -84,10 +84,12 @@ re:
 # TEST_MAIN = $(SRC_DIR)/all_tests.cpp
 
 UTEST := src/all_tests.cpp
-UTEST += src/tmp/tests/tmp_test.cpp
+# UTEST += src/tmp/tests/tmp_test.cpp
+UTEST += src/common/crc16/CRC16_MCRF4XX.c
+UTEST += src/common/crc16/tests/CRC16_MCRF4XX_test.cpp
 
 test: re
-	g++ $(UTEST) -o $(TEST) -lCppUTest -lCppUTestExt
+	g++ $(UTEST) -o $(TEST) $(CPPFLAGS) -lCppUTest -lCppUTestExt
 	$(TEST)
 
 #------------------------------------------------#
