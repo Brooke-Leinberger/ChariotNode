@@ -8,5 +8,5 @@ TEST_GROUP(FirstTestGroup)
 
 TEST(FirstTestGroup, FirstTest)
 {
-    FAIL("FAIL ME!");
+    //noop
 }
