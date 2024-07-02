@@ -16,14 +16,19 @@ NAME        := module
 # CFLAGS    compiler flags
 # CPPFLAGS  preprocessor flags
 
-SRC_DIR     := src
+SUB_DIR		:= ChariotModule
+SRC_DIR     := $(SUB_DIR)/src
 OBJ_DIR     := build/obj
-BIN_DIR		:= build
+BIN_DIR		:= build/bin
 TEST 		:= $(BIN_DIR)/$(NAME)_test
-SRCS        := module.c
-#SRCS        += module.c
+SRCS        := module.cpp
+#SRCS        +=
+EXT_SRC		:= common/src 
+
+
 SRCS        := $(SRCS:%=$(SRC_DIR)/%)
-OBJS        := $(SRCS:$(SRC_DIR)/%.c=$(OBJ_DIR)/%.o)
+OBJS_CPP    := $(SRCS:$(SRC_DIR)/%.cpp=$(OBJ_DIR)/$(SUB_DIR)/%.o)
+
 BINS		:= $(BIN_DIR)/$(NAME)
 
 CC          := gcc
@@ -53,20 +58,32 @@ DIR_DUP     = mkdir -p $(@D)
 
 all: $(NAME)
 
-$(NAME): $(OBJS)
-	$(CC) $(OBJS) -o $(BIN_DIR)/$(NAME)
+$(NAME): $(OBJS_CPP)
+	$(CC) $(OBJS_CPP) -o $(BIN_DIR)/$(NAME)
 	$(info CREATED $(NAME))
 
-$(OBJ_DIR)/%.o: $(SRC_DIR)/%.c
+# $(OBJ_DIR)/$(NAME).o: $(SRC_DIR)/$(NAME).cpp
+# 	$(DIR_DUP)
+# 	$(CC) $(CFLAGS) $(CPPFLAGS) -c -o $@ $<
+# 	$(info CREATED $@)
+
+$(OBJ_DIR)/$(SUB_DIR)/%.o: $(SRC_DIR)/%.cpp
 	$(DIR_DUP)
 	$(CC) $(CFLAGS) $(CPPFLAGS) -c -o $@ $<
 	$(info CREATED $@)
 
+# $(OBJ_DIR)/%.o: $(SRC_DIR)/%.c
+# 	$(DIR_DUP)
+# 	$(CC) $(CFLAGS) $(CPPFLAGS) -c -o $@ $<
+# 	$(info CREATED $@)
+
 clean:
-	$(RM) $(OBJS)
+	$(RM) $(OBJS_CPP)
 
 fclean: clean
 	$(RM) $(NAME)
+	mkdir -p $(BIN_DIR)
+	mkdir -p $(OBJ_DIR)
 
 re:
 	$(MAKE) fclean
@@ -86,6 +103,7 @@ re:
 UTEST := src/all_tests.cpp
 UTEST += src/tmp/tests/tmp_test.cpp
 
+UTEST := $(UTEST:%=$(SUB_DIR)/%)
 test: re
 	g++ $(UTEST) -o $(TEST) -lCppUTest -lCppUTestExt
 	$(TEST)
