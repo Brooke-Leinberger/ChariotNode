@@ -22,7 +22,7 @@ OBJ_DIR     := build/obj
 BIN_DIR		:= build/bin
 TEST 		:= $(BIN_DIR)/$(NAME)_test
 SRCS        := module.cpp
-#SRCS        +=
+SRCS        += tmp/tmp.cpp
 EXT_SRC		:= common/src 
 
 
@@ -102,10 +102,11 @@ re:
 
 UTEST := src/all_tests.cpp
 UTEST += src/tmp/tests/tmp_test.cpp
+UTEST += src/tmp/tmp.cpp
 
 UTEST := $(UTEST:%=$(SUB_DIR)/%)
 test: re
-	g++ $(UTEST) -o $(TEST) -lCppUTest -lCppUTestExt
+	g++ $(UTEST) -o $(TEST) -lCppUTest -lCppUTestExt -I$(SRC_DIR)
 	$(TEST)
 
 #------------------------------------------------#
