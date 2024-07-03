@@ -7,7 +7,7 @@ NAME        := module
 #------------------------------------------------#
 #   INGREDIENTS                                  #
 #------------------------------------------------#
-# SRC_DIR   source directory
+# INT_SRC_DIR   source directory
 # OBJ_DIR   object directory
 # SRCS      source files
 # OBJS      object files
@@ -17,23 +17,32 @@ NAME        := module
 # CPPFLAGS  preprocessor flags
 
 SUB_DIR		:= ChariotModule
-SRC_DIR     := $(SUB_DIR)/src
+EXT_DIR 	:= common
+
+INT_SRC_DIR := $(SUB_DIR)/src
+EXT_SRC_DIR := $(EXT_DIR)/src
 OBJ_DIR     := build/obj
 BIN_DIR		:= build/bin
 TEST 		:= $(BIN_DIR)/$(NAME)_test
-SRCS        := module.cpp
-SRCS        += tmp/tmp.cpp
-EXT_SRC		:= common/src 
-
-
-SRCS        := $(SRCS:%=$(SRC_DIR)/%)
-OBJS_CPP    := $(SRCS:$(SRC_DIR)/%.cpp=$(OBJ_DIR)/$(SUB_DIR)/%.o)
-
 BINS		:= $(BIN_DIR)/$(NAME)
 
+# Compiler options
 CC          := gcc
-CFLAGS      := -Wall -Wextra -Werror
-CPPFLAGS    := -I include
+CFLAGS      := -Wall -Wextra -Werror -std=c++23
+CPPFLAGS    := -I include -I$(INT_SRC_DIR) -I$(EXT_SRC_DIR)
+
+# Internal sources (ChariotModule)
+SRCS        := module.cpp
+SRCS        += tmp/tmp.cpp
+
+# External sources (Common)
+EXTS		:= log/log.cpp
+
+# Automated reformatting
+SRCS        := $(SRCS:%=$(INT_SRC_DIR)/%)
+EXTS        := $(EXTS:%=$(EXT_SRC_DIR)/%)
+OBJS_CPP    := $(SRCS:$(INT_SRC_DIR)/%.cpp=$(OBJ_DIR)/$(SUB_DIR)/%.o)
+OBJS_CPP	+= $(EXTS:$(EXT_SRC_DIR)/%.cpp=$(OBJ_DIR)/$(EXT_DIR)/%.o)
 
 #------------------------------------------------#
 #   UTENSILS                                     #
@@ -58,21 +67,25 @@ DIR_DUP     = mkdir -p $(@D)
 
 all: $(NAME)
 
+# Executable
 $(NAME): $(OBJS_CPP)
 	$(CC) $(OBJS_CPP) -o $(BIN_DIR)/$(NAME)
 	$(info CREATED $(NAME))
 
-# $(OBJ_DIR)/$(NAME).o: $(SRC_DIR)/$(NAME).cpp
-# 	$(DIR_DUP)
-# 	$(CC) $(CFLAGS) $(CPPFLAGS) -c -o $@ $<
-# 	$(info CREATED $@)
-
-$(OBJ_DIR)/$(SUB_DIR)/%.o: $(SRC_DIR)/%.cpp
+# Internal source compilation
+$(OBJ_DIR)/$(SUB_DIR)/%.o: $(INT_SRC_DIR)/%.cpp
 	$(DIR_DUP)
 	$(CC) $(CFLAGS) $(CPPFLAGS) -c -o $@ $<
 	$(info CREATED $@)
 
-# $(OBJ_DIR)/%.o: $(SRC_DIR)/%.c
+# External source compilation
+$(OBJ_DIR)/$(EXT_DIR)/%.o: $(EXT_SRC_DIR)/%.cpp
+	$(DIR_DUP)
+	$(CC) $(CFLAGS) $(CPPFLAGS) -c -o $@ $<
+	$(info CREATED $@)
+
+# C file compilation
+# $(OBJ_DIR)/%.o: $(INT_SRC_DIR)/%.c
 # 	$(DIR_DUP)
 # 	$(CC) $(CFLAGS) $(CPPFLAGS) -c -o $@ $<
 # 	$(info CREATED $@)
@@ -98,15 +111,19 @@ re:
 # CXXFLAGS += -include $(CPPUTEST_HOME)/include/CppUTest/MemoryLeakDetectorNewMacros.h
 # CFLAGS += -include $(CPPUTEST_HOME)/include/CppUTest/MemoryLeakDetectorMallocMacros.h
 # LD_LIBRARIES = -L$(CPPUTEST_HOME)/lib -lCppUTest -lCppUTestExt
-# TEST_MAIN = $(SRC_DIR)/all_tests.cpp
+# TEST_MAIN = $(INT_SRC_DIR)/all_tests.cpp
 
-UTEST := src/all_tests.cpp
-UTEST += src/tmp/tests/tmp_test.cpp
-UTEST += src/tmp/tmp.cpp
+INT_UTEST := all_tests.cpp
+INT_UTEST += tmp/tests/tmp_test.cpp
+INT_UTEST += tmp/tmp.cpp
 
-UTEST := $(UTEST:%=$(SUB_DIR)/%)
+EXT_UTEST := log/log.cpp
+
+UTEST := $(INT_UTEST:%=$(SUB_DIR)/src/%)
+UTEST += $(EXT_UTEST:%=$(EXT_DIR)/src/%)
+
 test: re
-	g++ $(UTEST) -o $(TEST) -lCppUTest -lCppUTestExt -I$(SRC_DIR)
+	g++ $(UTEST) -o $(TEST) -lCppUTest -lCppUTestExt -I$(INT_SRC_DIR) -I$(EXT_SRC_DIR)
 	$(TEST)
 
 #------------------------------------------------#
