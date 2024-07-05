@@ -2,7 +2,7 @@
 # Modified by Brooke Leinberger
 ####################################### BEG_3 ####
 
-NAME        := module
+NAME        := node
 
 #------------------------------------------------#
 #   INGREDIENTS                                  #
@@ -16,7 +16,7 @@ NAME        := module
 # CFLAGS    compiler flags
 # CPPFLAGS  preprocessor flags
 
-SUB_DIR		:= ChariotModule
+SUB_DIR		:= ChariotNode
 EXT_DIR 	:= common
 
 INT_SRC_DIR := $(SUB_DIR)/src
@@ -32,7 +32,7 @@ CFLAGS      := -Wall -Wextra -Werror -std=c++23
 CPPFLAGS    := -I include -I$(INT_SRC_DIR) -I$(EXT_SRC_DIR)
 
 # Internal sources (ChariotModule)
-SRCS        := module.cpp
+SRCS        := node.cpp
 SRCS        += tmp/tmp.cpp
 
 # External sources (Common)
