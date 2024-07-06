@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include "log/log.h"
 
-#define LOG_THRESHOLD_THIS LOG_THRESHOLD_SILENT
+#define LOG_THRESHOLD_THIS LOG_THRESHOLD_MAX
 
 int main()
 {
