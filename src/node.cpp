@@ -1,6 +1,8 @@
 #include <stdio.h>
 #include "log/log.h"
 
+#define LOG_THRESHOLD_THIS LOG_THRESHOLD_SILENT
+
 int main()
 {
     LOG_FATAL("Fatal error");
