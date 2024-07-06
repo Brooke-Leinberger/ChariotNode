@@ -31,12 +31,13 @@ CC          := gcc
 CFLAGS      := -Wall -Wextra -Werror -std=c++23
 CPPFLAGS    := -I include -I$(INT_SRC_DIR) -I$(EXT_SRC_DIR)
 
-# Internal sources (ChariotModule)
+# Internal sources (ChariotNode)
 SRCS        := node.cpp
 SRCS        += tmp/tmp.cpp
 
 # External sources (Common)
 EXTS		:= log/log.cpp
+EXTS		+= util/timestamp.cpp
 
 # Automated reformatting
 SRCS        := $(SRCS:%=$(INT_SRC_DIR)/%)
@@ -52,7 +53,7 @@ OBJS_CPP	+= $(EXTS:$(EXT_SRC_DIR)/%.cpp=$(OBJ_DIR)/$(EXT_DIR)/%.o)
 # DIR_DUP   duplicate directory tree
 
 RM          := rm -f
-MAKEFLAGS   += --no-print-directory
+# MAKEFLAGS   += --no-print-directory
 DIR_DUP     = mkdir -p $(@D)
 
 #------------------------------------------------#
@@ -70,25 +71,16 @@ all: $(NAME)
 # Executable
 $(NAME): $(OBJS_CPP)
 	$(CC) $(OBJS_CPP) -o $(BIN_DIR)/$(NAME)
-	$(info CREATED $(NAME))
 
 # Internal source compilation
 $(OBJ_DIR)/$(SUB_DIR)/%.o: $(INT_SRC_DIR)/%.cpp
 	$(DIR_DUP)
 	$(CC) $(CFLAGS) $(CPPFLAGS) -c -o $@ $<
-	$(info CREATED $@)
 
 # External source compilation
 $(OBJ_DIR)/$(EXT_DIR)/%.o: $(EXT_SRC_DIR)/%.cpp
 	$(DIR_DUP)
 	$(CC) $(CFLAGS) $(CPPFLAGS) -c -o $@ $<
-	$(info CREATED $@)
-
-# C file compilation
-# $(OBJ_DIR)/%.o: $(INT_SRC_DIR)/%.c
-# 	$(DIR_DUP)
-# 	$(CC) $(CFLAGS) $(CPPFLAGS) -c -o $@ $<
-# 	$(info CREATED $@)
 
 clean:
 	$(RM) $(OBJS_CPP)

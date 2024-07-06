@@ -3,4 +3,6 @@
 
 int main()
 {
+    LOG_info("Starting Chariot...");
+    LOG_info("Stopping Chariot...");
 }
