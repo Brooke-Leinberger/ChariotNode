@@ -110,12 +110,15 @@ INT_UTEST += tmp/tests/tmp_test.cpp
 INT_UTEST += tmp/tmp.cpp
 
 EXT_UTEST := log/log.cpp
+EXT_UTEST += util/timestamp.cpp
+EXT_UTEST += data/s_list.cpp
+EXT_UTEST += data/s_list_test.cpp
 
 UTEST := $(INT_UTEST:%=$(SUB_DIR)/src/%)
 UTEST += $(EXT_UTEST:%=$(EXT_DIR)/src/%)
 
 test: re
-	g++ $(UTEST) -o $(TEST) -lCppUTest -lCppUTestExt -I$(INT_SRC_DIR) -I$(EXT_SRC_DIR)
+	g++ $(UTEST) -g -o $(TEST) -lCppUTest -lCppUTestExt -I$(INT_SRC_DIR) -I$(EXT_SRC_DIR)
 	$(TEST)
 
 #------------------------------------------------#
