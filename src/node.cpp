@@ -7,6 +7,9 @@
 
 int main()
 {
+    LOG_init();
+    LOG_start();
+
     LOG_FATAL("Fatal error");
     LOG_ERROR("Standard error");
     LOG_IEC();
@@ -16,4 +19,7 @@ int main()
     LOG_VERBOSE(1, "Debugging");
     LOG_VERBOSE(2, "A lot of debugging");
     LOG_VERBOSE(9, "Dear god, the debugging");
+
+    LOG_stop();
+    LOG_destory();
 }

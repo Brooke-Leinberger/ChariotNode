@@ -28,7 +28,7 @@ BINS		:= $(BIN_DIR)/$(NAME)
 
 # Compiler options
 CC          := gcc
-CFLAGS      := -Wall -Wextra -Werror -std=c++23
+CFLAGS      := -g -Wall -Wextra -Werror -std=c++23
 CPPFLAGS    := -I include -I$(INT_SRC_DIR) -I$(EXT_SRC_DIR)
 
 # Internal sources (ChariotNode)
@@ -38,6 +38,7 @@ SRCS        += tmp/tmp.cpp
 # External sources (Common)
 EXTS		:= log/log.cpp
 EXTS		+= util/timestamp.cpp
+EXTS		+= data/s_list.cpp
 
 # Automated reformatting
 SRCS        := $(SRCS:%=$(INT_SRC_DIR)/%)
@@ -75,7 +76,7 @@ $(NAME): $(OBJS_CPP)
 # Internal source compilation
 $(OBJ_DIR)/$(SUB_DIR)/%.o: $(INT_SRC_DIR)/%.cpp
 	$(DIR_DUP)
-	$(CC) $(CFLAGS) $(CPPFLAGS) -c -o $@ $<
+	$(CC) $(CFLAGS) $(CPPFLAGS) -g -c -o $@ $<
 
 # External source compilation
 $(OBJ_DIR)/$(EXT_DIR)/%.o: $(EXT_SRC_DIR)/%.cpp
